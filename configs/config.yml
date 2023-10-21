@@ -1,0 +1,9 @@
+port: 8000
+
+db:
+  username: "wber"
+  password: "wber"
+  host: "localhost"
+  port: "5432"
+  dbname: "wb"
+  sslmode: "disable"
