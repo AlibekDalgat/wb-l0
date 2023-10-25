@@ -59,3 +59,8 @@ type Order struct {
 func (o *Order) IsValid() bool {
 	return o.OrderUID != ""
 }
+
+type Output struct {
+	OrderUID    string `json:"order_uid" binding:"required" db:"id"`
+	Description []byte `json:"order" binding:"required" db:"description"`
+}

@@ -7,7 +7,9 @@ import (
 
 type Order interface {
 	GetOrder(id string) (wb_l0.Order, error)
-	AddOrder(orderUID string, data []byte) error
+	AddOrder(orderUID wb_l0.Order, data []byte) error
+	PullAllOrders() error
+	Show()
 }
 
 type Service struct {

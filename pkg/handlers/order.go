@@ -27,7 +27,7 @@ func (h *Handler) AddOrder(data []byte) error {
 		return err
 	}
 	if dataJson.IsValid() {
-		return h.services.AddOrder(dataJson.OrderUID, data)
+		return h.services.AddOrder(dataJson, data)
 	} else {
 		return errors.New("Невалидный json")
 	}

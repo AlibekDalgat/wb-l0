@@ -29,12 +29,16 @@ func main() {
 		SSLMode:  viper.GetString("db.sslmode"),
 		Password: viper.GetString("db.password"),
 	})
-
 	if err != nil {
-		logrus.Fatalf("Ошибка при инициализации базы данных: %v", err)
+		logrus.Fatalf("Ошибка при инициализации базы данных: %s", err.Error())
 	}
+
 	repos := repository.NewRepository(db)
 	services := service.NewService(repos)
+	err = services.PullAllOrders()
+	if err != nil {
+		logrus.Fatalf("Ошибка при восстановлении кэша: %s", err.Error())
+	}
 	handlers := handlers.NewHandler(services)
 	srv := new(wb_l0.Server)
 	go func() {
