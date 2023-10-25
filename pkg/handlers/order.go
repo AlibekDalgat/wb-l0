@@ -1,8 +1,12 @@
 package handlers
 
 import (
+	"encoding/json"
+	"errors"
 	"github.com/gin-gonic/gin"
+	"github.com/sirupsen/logrus"
 	"net/http"
+	wb_l0 "wb-l0"
 )
 
 func (h *Handler) getOrder(c *gin.Context) {
@@ -13,4 +17,18 @@ func (h *Handler) getOrder(c *gin.Context) {
 		return
 	}
 	c.JSON(http.StatusOK, info)
+}
+
+func (h *Handler) AddOrder(data []byte) error {
+	var dataJson wb_l0.Order
+	err := json.Unmarshal(data, &dataJson)
+	if err != nil {
+		logrus.Errorf("Некорректное содержание сообщения из nats-streaming")
+		return err
+	}
+	if dataJson.IsValid() {
+		return h.services.AddOrder(dataJson.OrderUID, data)
+	} else {
+		return errors.New("Невалидный json")
+	}
 }

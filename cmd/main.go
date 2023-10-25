@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	_ "github.com/lib/pq"
+	"github.com/nats-io/nats.go"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/viper"
 	"net/http"
@@ -35,13 +36,27 @@ func main() {
 	repos := repository.NewRepository(db)
 	services := service.NewService(repos)
 	handlers := handlers.NewHandler(services)
-
 	srv := new(wb_l0.Server)
 	go func() {
 		if err := srv.Run(viper.GetString("port"), handlers.InitRoutes()); err != nil && err != http.ErrServerClosed {
 			logrus.Fatalf("Ошибка при запуске сервера: %s", err.Error())
 		}
 	}()
+
+	nc, err := nats.Connect(viper.GetString("nats.url"))
+	if err != nil {
+		logrus.Fatalf("Ошибка подключения к nats-streaming: %s", err.Error())
+	}
+	defer nc.Close()
+	channel := viper.GetString("nats.channel")
+	sub, err := nc.Subscribe(channel, func(msg *nats.Msg) {
+		logrus.Printf("Получено сообщение из канала: %s\n", string(msg.Data))
+		handlers.AddOrder(msg.Data)
+	})
+	if err != nil {
+		logrus.Errorf("Ошибка при подписки на канал %s: %s", channel, err.Error())
+	}
+	defer sub.Unsubscribe()
 
 	logrus.Println("Запуск сервиса")
 	quit := make(chan os.Signal, 1)

@@ -55,3 +55,7 @@ type Order struct {
 	DateCreated       time.Time `json:"date_created" binding:"required"`
 	OofShard          string    `json:"oof_shard" binding:"required"`
 }
+
+func (o *Order) IsValid() bool {
+	return o.OrderUID != ""
+}

@@ -7,3 +7,7 @@ db:
   port: "5432"
   dbname: "wb"
   sslmode: "disable"
+
+nats:
+  url: "nats://localhost:4222"
+  channel: "channel"

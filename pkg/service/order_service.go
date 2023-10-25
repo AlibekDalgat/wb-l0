@@ -16,3 +16,7 @@ func NewOrderService(repo *repository.Repository) *OrderService {
 func (o *OrderService) GetOrder(id string) (wb_l0.Order, error) {
 	return o.repo.GetOrder(id)
 }
+
+func (o *OrderService) AddOrder(orderUID string, data []byte) error {
+	return o.repo.AddOrder(orderUID, data)
+}
