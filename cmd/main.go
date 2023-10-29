@@ -55,7 +55,10 @@ func main() {
 	channel := viper.GetString("nats.channel")
 	sub, err := nc.Subscribe(channel, func(msg *nats.Msg) {
 		logrus.Printf("Получено сообщение из канала: %s\n", string(msg.Data))
-		handlers.AddOrder(msg.Data)
+		err := handlers.AddOrder(msg.Data)
+		if err != nil {
+			logrus.Errorf("Ошибка при работе с nats-streamingL %s", err.Error())
+		}
 	})
 	if err != nil {
 		logrus.Errorf("Ошибка при подписки на канал %s: %s", channel, err.Error())

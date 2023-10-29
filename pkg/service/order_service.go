@@ -2,8 +2,6 @@ package service
 
 import (
 	"errors"
-	"fmt"
-	"time"
 	wb_l0 "wb-l0"
 	"wb-l0/pkg/repository"
 )
@@ -39,14 +37,4 @@ func (o *OrderService) PullAllOrders() error {
 	var err error
 	o.cache, err = o.repo.PullAllOrders()
 	return err
-}
-
-func (o *OrderService) Show() {
-	for {
-		for id := range o.cache {
-			fmt.Printf("Ключ: %s\n", id)
-		}
-		fmt.Println("vivod")
-		time.Sleep(5 * time.Second)
-	}
 }

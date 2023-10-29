@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"errors"
 	"github.com/gin-gonic/gin"
-	"github.com/sirupsen/logrus"
 	"net/http"
 	wb_l0 "wb-l0"
 )
@@ -23,8 +22,7 @@ func (h *Handler) AddOrder(data []byte) error {
 	var dataJson wb_l0.Order
 	err := json.Unmarshal(data, &dataJson)
 	if err != nil {
-		logrus.Errorf("Некорректное содержание сообщения из nats-streaming")
-		return err
+		return errors.New("Некорректное содержание сообщения в канале")
 	}
 	if dataJson.IsValid() {
 		return h.services.AddOrder(dataJson, data)

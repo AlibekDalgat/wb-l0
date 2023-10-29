@@ -5,11 +5,11 @@ import (
 	"wb-l0/pkg/repository"
 )
 
+//go:generate mockgen -source=service.go -destination=mocks/mock.go.
 type Order interface {
 	GetOrder(id string) (wb_l0.Order, error)
 	AddOrder(orderUID wb_l0.Order, data []byte) error
 	PullAllOrders() error
-	Show()
 }
 
 type Service struct {
