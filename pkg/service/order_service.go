@@ -26,6 +26,9 @@ func (o *OrderService) GetOrder(id string) (wb_l0.Order, error) {
 }
 
 func (o *OrderService) AddOrder(order wb_l0.Order, data []byte) error {
+	if order.OrderUID == "" {
+		return errors.New("Пустой OrderUID")
+	}
 	if _, ok := o.cache[order.OrderUID]; ok {
 		return errors.New("Заказ с таким именем уже существует.")
 	}
